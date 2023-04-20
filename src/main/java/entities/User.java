@@ -39,7 +39,22 @@ public class User implements Serializable {
   @ManyToMany
   private List<Role> roleList = new ArrayList<>();
 
-    // Method that returns roles as strings.
+  @ManyToMany
+  @JoinTable(name = "users_favourites",
+          joinColumns = @JoinColumn(name = "user_user_name"),
+          inverseJoinColumns = @JoinColumn(name = "favourites_id"))
+  private List<Favourites> favourites = new ArrayList<>();
+
+  public List<Favourites> getFavourites() {
+    return favourites;
+  }
+
+  public void addFavourites(Favourites favourites) {
+    this.favourites.add(favourites);
+    favourites.addUserList(this);
+  }
+
+  // Method that returns roles as strings.
   public List<String> getRolesAsStrings() {
     if (roleList.isEmpty()) {
       return null;
@@ -89,6 +104,8 @@ public class User implements Serializable {
   public void setRoleList(List<Role> roleList) {
     this.roleList = roleList;
   }
+
+
 
     // A setRole method rewritten to add a role to roleList.
   public void addRole(Role userRole) {
